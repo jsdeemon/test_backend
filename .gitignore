@@ -1,0 +1,4 @@
+/node_modules
+/pgadmin4
+/docker_pggadmin__sservers.json
+/docker_postgres-init,sql

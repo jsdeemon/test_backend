@@ -1,4 +1,4 @@
-const ApiError = require('../error/ApiError')
+const CustomError = require('../error/CustomError')
 const bcrypt = require('bcrypt')
 import jwt from 'jsonwebtoken'
 // const bcrypt = require('bcrypt')
@@ -30,11 +30,14 @@ class UserController {
     async registration(req: any, res: any, next: any) {
         const {email, password, role} = req.body
         if (!email || !password) {
-            return next(ApiError.badRequest('Некорректный email или password'))
+            const err = new CustomError(403, 'Некорректный email или пароль')
+            return next(res.status(err.status).json({error: err.message}))
         }
         const candidate = await User.findOne({where: {email}})
         if (candidate) {
-            return next(ApiError.badRequest('Пользователь с таким email уже существует'))
+            const err = new CustomError(403, 'Пользователь с таким email уже существует')
+            return next(res.status(err.status).json({error: err.message}))
+          //  return next(ApiError.badRequest('Пользователь с таким email уже существует'))
         }
         const hashPassword = await bcrypt.hash(password, 5)
         const user = await User.create({email, role, password: hashPassword})
@@ -47,11 +50,17 @@ class UserController {
         const {email, password} = req.body
         const user = await User.findOne({where: {email}})
         if (!user) {
-            return next(ApiError.internal('Пользователь не найден'))
+            const err = new CustomError(404, 'Пользователь не найден')
+            return next(res.status(err.status).json({error: err.message}))
+           // return next(new CustomError(404, 'Пользователь не найден'))
+          //  return next(ApiError.internal('Пользователь не найден'))
         }
         let comparePassword = bcrypt.compareSync(password, user.password)
         if (!comparePassword) {
-            return next(ApiError.internal('Указан неверный пароль'))
+            const err = new CustomError(403, 'Указан неверный пароль')
+            return next(res.status(err.status).json({error: err.message}))
+            // return next(new CustomError(500, 'Указан неверный пароль'))
+           // return next(ApiError.internal('Указан неверный пароль'))
         }
         const token = generateJwt(user.id, user.email, user.role)
         return res.json({token})

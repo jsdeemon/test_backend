@@ -1,6 +1,7 @@
 require('dotenv').config()
 import express from 'express'
 import db from './db' 
+const jwt = require('jsonwebtoken')
 import cors from 'cors' 
 import router from './routes/index'
 import path from 'path' 

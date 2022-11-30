@@ -1,8 +1,5 @@
-// const jwt = require('jsonwebtoken')
 import jwt from 'jsonwebtoken'
 
-// module.exports = 
-// const role: string = 'ADMIN'
 
 module.exports = function(role: string = "ADMIN") {
     return function (req: any, res: any, next: any) {
@@ -21,7 +18,6 @@ module.exports = function(role: string = "ADMIN") {
             req.user = decoded;
             next()
         } catch (e) {
-           // return res.status(401).json(e)
              res.status(401).json({message: "Не авторизован ошибка"})
         }
     };

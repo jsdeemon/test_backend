@@ -1,13 +1,8 @@
 const CustomError = require('../error/CustomError')
 const bcrypt = require('bcrypt')
 import jwt from 'jsonwebtoken'
-// const bcrypt = require('bcrypt')
-// const jwt = require('jsonwebtoken')
 import User from '../models/models'
-// import dotenv from 'dotenv'
 
-// dotenv.config()
-// const {Usr: any} = require('../models/models.ts')
 declare global {
     namespace NodeJS {
       interface ProcessEnv {
@@ -16,8 +11,6 @@ declare global {
       }
     }
   }
-
-
 
 const generateJwt = (id: number, email: string, role: string) => {
     return jwt.sign(
@@ -72,11 +65,9 @@ class UserController {
         if (candidate) {
             const err = new CustomError(403, 'Пользователь с таким email уже существует')
             return next(res.status(err.status).json({error: err.message}))
-          //  return next(ApiError.badRequest('Пользователь с таким email уже существует'))
         }
         const hashPassword = await bcrypt.hash(password, 5)
         const user = await User.create({email, role, password: hashPassword})
-        // const basket = await Basket.create({userId: user.id})
         const token = generateJwt(user.id, user.email, user.role)
         return res.json({token})
     }
@@ -87,15 +78,11 @@ class UserController {
         if (!user) {
             const err = new CustomError(404, 'Пользователь не найден')
             return next(res.status(err.status).json({error: err.message}))
-           // return next(new CustomError(404, 'Пользователь не найден'))
-          //  return next(ApiError.internal('Пользователь не найден'))
         }
         let comparePassword = bcrypt.compareSync(password, user.password)
         if (!comparePassword) {
             const err = new CustomError(403, 'Указан неверный пароль')
             return next(res.status(err.status).json({error: err.message}))
-            // return next(new CustomError(500, 'Указан неверный пароль'))
-           // return next(ApiError.internal('Указан неверный пароль'))
         }
         const token = generateJwt(user.id, user.email, user.role)
         return res.json({token})

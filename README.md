@@ -36,3 +36,6 @@ GET http://localhost:5000/api/user/:id
 
 ### Редактирование информации о пользователе - только по токену с ролью администратора
 PUT http://localhost:5000/api/user/:id
+
+NodeJs v 16.13.0
+docker-compose v 1.27 

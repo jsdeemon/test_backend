@@ -18,6 +18,7 @@ declare global {
   }
 
 
+
 const generateJwt = (id: number, email: string, role: string) => {
     return jwt.sign(
         {id, email, role},
@@ -27,6 +28,17 @@ const generateJwt = (id: number, email: string, role: string) => {
 }
 
 class UserController {
+
+  async getOneUser(req: any, res: any, next: any) {
+    const id = req.params.id
+    const user = await User.findOne({where: {id}})
+    if (user) {
+      return res.status(200).json(user)
+    } else {
+      return res.status(404).json({message: "Пользователь не найден"})
+    }
+  }
+
     async registration(req: any, res: any, next: any) {
         const {email, password, role} = req.body
         if (!email || !password) {

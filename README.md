@@ -27,5 +27,11 @@ POST http://localhost:5000/api/user/login
     "password": "123123123" 
 } 
 
-### доступ по токену
-GET http://localhost:5000/api/user/auth 
+### доступ по токену для всех авторизованных пользователей
+GET http://localhost:5000/api/user/auth  
+
+### доступ по токену по ролям - только для роли ADMIN
+GET http://localhost:5000/api/user/admin 
+
+### Получение информации о пользователе - публичный
+GET http://localhost:5000/api/user/:id

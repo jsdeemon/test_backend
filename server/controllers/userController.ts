@@ -29,11 +29,34 @@ const generateJwt = (id: number, email: string, role: string) => {
 
 class UserController {
 
-  async getOneUser(req: any, res: any, next: any) {
+  async getOneUser(req: any, res: any) {
     const id = req.params.id
     const user = await User.findOne({where: {id}})
     if (user) {
       return res.status(200).json(user)
+    } else {
+      return res.status(404).json({message: "Пользователь не найден"})
+    }
+  }
+
+  async updateUser(req: any, res: any) {
+    const id = req.params.id
+    const {email, password, role} = req.body
+    const user = await User.findOne({where: {id}})
+    if (user) {
+      if (password) {
+        const hashPassword = await bcrypt.hash(password, 5) 
+        user.password = hashPassword
+      }
+      if (role) {
+        user.role = role
+      }
+      if (user.email != email) {
+        user.email = email
+      }
+
+      const updatedUser = await user.save()
+      return res.status(200).json(updatedUser)
     } else {
       return res.status(404).json({message: "Пользователь не найден"})
     }

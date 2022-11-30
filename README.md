@@ -1,5 +1,3 @@
-
-
 ### setting up environment
 ```bash
 $ npm install
@@ -34,4 +32,7 @@ GET http://localhost:5000/api/user/auth
 GET http://localhost:5000/api/user/admin 
 
 ### Получение информации о пользователе - публичный
-GET http://localhost:5000/api/user/:id
+GET http://localhost:5000/api/user/:id 
+
+### Редактирование информации о пользователе - только по токену с ролью администратора
+PUT http://localhost:5000/api/user/:id
